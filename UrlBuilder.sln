@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30002.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrlBuilder", "UrlBuilder\UrlBuilder.csproj", "{F50E8B22-1713-4D89-9D97-5528868AECE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrlBuilder.Tests", "UrlBuilder.Tests\UrlBuilder.Tests.csproj", "{408B1625-3C69-403C-80E6-D2D65DF579FA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F50E8B22-1713-4D89-9D97-5528868AECE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F50E8B22-1713-4D89-9D97-5528868AECE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F50E8B22-1713-4D89-9D97-5528868AECE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F50E8B22-1713-4D89-9D97-5528868AECE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{408B1625-3C69-403C-80E6-D2D65DF579FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{408B1625-3C69-403C-80E6-D2D65DF579FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{408B1625-3C69-403C-80E6-D2D65DF579FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{408B1625-3C69-403C-80E6-D2D65DF579FA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {69FB3537-A069-4C02-93BF-5D0C5FC143A6}
+	EndGlobalSection
+EndGlobal
