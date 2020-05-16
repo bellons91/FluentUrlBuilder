@@ -13,4 +13,8 @@
     <FileVersion>0.0.0.1</FileVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\Davide\source\repos\bellons91\UrlBuilder\UrlBuilder\UrlBuilder.xml</DocumentationFile>
+  </PropertyGroup>
+
 </Project>

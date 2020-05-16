@@ -3,6 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+/*TODO:  
+ 1- rinominare Part come pathPart
+ 2- rinominare Hash come Fragment
+ 3- rinomina Solution e classe come FluentUrlBuilder
+ 4- trasforma InsertQS in UpsertQS
+ 5- trasforma InsertHash in UpsertHash
+ 6- Aggiungi overload in addPart, insertQS e insertHash per Predicate<T>=>bool per inserimento condizionale.
+     */
+
+
 namespace UrlBuilder
 {
     /// <summary>
@@ -25,8 +35,11 @@ namespace UrlBuilder
         /// Initializes a UrlBuilder object.
         /// </summary>
         /// <param name="parts">Inital parts used to build the final URL. 
-        /// All the parts are trimmed of the initial and final slashes, and if the part is not empty it is used to build the URL.
         /// </param>
+        /// <remarks>All the parts are trimmed of the initial and final slashes, and if the part is not empty it is used to build the URL.</remarks>
+        /// <example>
+        /// To initialize a builder, you can write <c>var builder = UrlBuilder.Initialize("http://example.com", "a-section", "a-subfolder")</c>.
+        /// </example>
         /// <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
         public static UrlBuilder Initialize(params string[] parts)
         {
@@ -43,6 +56,27 @@ namespace UrlBuilder
             pathPart = pathPart.Trim('/');
             if (!string.IsNullOrWhiteSpace(pathPart))
                 this.urlBuilder.Append('/').Append(pathPart);
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a path part to the builder, only if the part is valid and the <paramref name="add"/> parameter is true.
+        /// </summary>
+        /// <remarks>The <paramref name="add"/> parameter allows you to conditionally add a part while building the URL.
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// var part = "my-page";
+        /// var builder = UrlBuilder.Initialize("http://example.com").AddPart(part, (part.Length > 5));
+        /// </code>
+        /// </example>
+        /// <param name="pathPart">Part to be added</param>
+        /// <param name="add">Initial check before adding the parameter</param>
+        /// <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
+        public UrlBuilder AddPart (string pathPart, bool add)
+        {
+            if (add)
+                return this.AddPart(pathPart);
             return this;
         }
 
