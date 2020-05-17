@@ -1,9 +1,9 @@
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace UrlBuilder
+namespace FluentUrlBuilder
 {
-    public class UrlBuilderTests
+    public class FluentUrlBuilderTests
     {
 
         [Test]
@@ -13,7 +13,7 @@ namespace UrlBuilder
             var baseUrl = "https://www.code4it.dev";
 
             //Act
-            var builder = UrlBuilder.Initialize(baseUrl);
+            var builder = FluentUrlBuilder.Initialize(baseUrl);
 
             //Assert
             builder.GetResult().Should().Be(baseUrl);
@@ -33,7 +33,7 @@ namespace UrlBuilder
         public string Constructor_Should_InitializeCorrectly_When_InitialUrlIsMultiple(params string[] varie)
         {
             //Act
-            var builder = UrlBuilder.Initialize(varie);
+            var builder = FluentUrlBuilder.Initialize(varie);
 
             //Assert
             return builder.GetResult();
@@ -50,7 +50,7 @@ namespace UrlBuilder
         public string AddPart_Should_CorrectlyAddPart(string baseUrl, string part)
         {
             //Arrange
-            var builder = UrlBuilder.Initialize(baseUrl);
+            var builder = FluentUrlBuilder.Initialize(baseUrl);
 
             //Act
             builder.AddPart(part);

@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UrlBuilder\UrlBuilder.csproj" />
+    <ProjectReference Include="..\UrlBuilder\FluentUrlBuilder.csproj" />
   </ItemGroup>
 
 </Project>

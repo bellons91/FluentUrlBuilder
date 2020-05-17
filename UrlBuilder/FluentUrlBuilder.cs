@@ -15,18 +15,18 @@ using System.Text;
 
 
 [assembly: InternalsVisibleTo("UrlBuilder.Tests")]
-namespace UrlBuilder
+namespace FluentUrlBuilder
 {
     /// <summary>
     /// Creates and build a URL. The building operations can be appendend.
     /// </summary>
-    public class UrlBuilder
+    public class FluentUrlBuilder
     {
         private StringBuilder urlBuilder;
         internal Dictionary<string, string> qs;
         internal string hashPart = "";
 
-        private UrlBuilder(params string[] parts)
+        private FluentUrlBuilder(params string[] parts)
         {
             var cleanedParts = parts.Select(p => p.Trim('/')).Where(p => !string.IsNullOrWhiteSpace(p));
             urlBuilder = new StringBuilder(string.Join("/", cleanedParts));
@@ -43,9 +43,9 @@ namespace UrlBuilder
         /// To initialize a builder, you can write <c>var builder = UrlBuilder.Initialize("http://example.com", "a-section", "a-subfolder")</c>.
         /// </example>
         /// <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
-        public static UrlBuilder Initialize(params string[] parts)
+        public static FluentUrlBuilder Initialize(params string[] parts)
         {
-            return new UrlBuilder(parts);
+            return new FluentUrlBuilder(parts);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace UrlBuilder
         /// </summary>
         /// <param name="pathPart">part to be added to the builder</param>
         /// <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
-        public UrlBuilder AddPart(string pathPart)
+        public FluentUrlBuilder AddPart(string pathPart)
         {
             pathPart = pathPart.Trim('/');
             if (!string.IsNullOrWhiteSpace(pathPart))
@@ -75,7 +75,7 @@ namespace UrlBuilder
         /// <param name="pathPart">Part to be added</param>
         /// <param name="add">Initial check before adding the parameter</param>
         /// <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
-        public UrlBuilder AddPart (string pathPart, bool add)
+        public FluentUrlBuilder AddPart(string pathPart, bool add)
         {
             if (add)
                 return this.AddPart(pathPart);
@@ -87,7 +87,7 @@ namespace UrlBuilder
         /// </summary>
         /// <param name="fragment">Fragment part to be added. If a fragment has already been set, it will be replaced with the new one</param>
         /// <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
-        public UrlBuilder AddHashValue(string fragment)
+        public FluentUrlBuilder AddHashValue(string fragment)
         {
             if (!string.IsNullOrWhiteSpace(fragment))
                 this.hashPart = fragment;
@@ -98,7 +98,7 @@ namespace UrlBuilder
         /// Removes the Fragment part
         /// </summary>
         /// <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
-        public UrlBuilder RemoveFragment()
+        public FluentUrlBuilder RemoveFragment()
         {
             this.hashPart = null;
             return this;
@@ -110,7 +110,7 @@ namespace UrlBuilder
         /// <param name="key">Key of the query string</param>
         /// <param name="value">Value of the query string</param>
         /// <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
-        public UrlBuilder AddQueryStringPair(string key, string value)
+        public FluentUrlBuilder AddQueryStringPair(string key, string value)
         {
             if (!string.IsNullOrWhiteSpace(key))
                 qs.Add(key, value);
@@ -122,9 +122,9 @@ namespace UrlBuilder
         /// </summary>
         /// <param name="key">Key to be removed</param>
         /// <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
-        public UrlBuilder RemoveQueryStringPair(string key)
+        public FluentUrlBuilder RemoveQueryStringPair(string key)
         {
-            if(!string.IsNullOrWhiteSpace(key) && this.qs.ContainsKey(key))
+            if (!string.IsNullOrWhiteSpace(key) && this.qs.ContainsKey(key))
             {
                 this.qs.Remove(key);
             }
@@ -137,7 +137,7 @@ namespace UrlBuilder
         /// <param name="key">Key to be added</param>
         /// <param name="value">Value to be added</param>
         /// <returns></returns>
-        public UrlBuilder ReplaceQueryStringPair(string key, string value)
+        public FluentUrlBuilder ReplaceQueryStringPair(string key, string value)
         {
             if (!string.IsNullOrWhiteSpace(key) && this.qs.ContainsKey(key))
             {
