@@ -5,16 +5,13 @@ using System.Runtime.CompilerServices;
 using System.Text;
 
 /*TODO:  
- 1- rinominare Part come pathPart
  2- rinominare Hash come Fragment
- 3- rinomina Solution e classe come FluentUrlBuilder
  4- trasforma InsertQS in UpsertQS
  5- trasforma InsertHash in UpsertHash
- 6- Aggiungi overload in addPart, insertQS e insertHash per Predicate<T>=>bool per inserimento condizionale.
      */
 
 
-[assembly: InternalsVisibleTo("UrlBuilder.Tests")]
+[assembly: InternalsVisibleTo("FluentUrlBuilder.Tests")]
 namespace FluentUrlBuilder
 {
     /// <summary>
@@ -22,15 +19,19 @@ namespace FluentUrlBuilder
     /// </summary>
     public class FluentUrlBuilder
     {
-        private StringBuilder urlBuilder;
+        //private StringBuilder urlBuilder;
+
+        internal List<string> urlParts;
         internal Dictionary<string, string> qs;
-        internal string hashPart = "";
+        internal string hashFragment = "";
 
         private FluentUrlBuilder(params string[] parts)
         {
             var cleanedParts = parts.Select(p => p.Trim('/')).Where(p => !string.IsNullOrWhiteSpace(p));
-            urlBuilder = new StringBuilder(string.Join("/", cleanedParts));
+            //urlBuilder = new StringBuilder(string.Join("/", cleanedParts));
             qs = new Dictionary<string, string>();
+            urlParts = new List<string>();
+            urlParts.AddRange(cleanedParts);
         }
 
         /// <summary>
@@ -45,6 +46,8 @@ namespace FluentUrlBuilder
         /// <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
         public static FluentUrlBuilder Initialize(params string[] parts)
         {
+            if (parts == null || parts.Length == 0 || parts.Where(p => !string.IsNullOrWhiteSpace(TrimString(p))).Count() == 0)
+                throw new ArgumentException("Unable to initialize builder without valid parts");
             return new FluentUrlBuilder(parts);
         }
 
@@ -53,11 +56,11 @@ namespace FluentUrlBuilder
         /// </summary>
         /// <param name="pathPart">part to be added to the builder</param>
         /// <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
-        public FluentUrlBuilder AddPart(string pathPart)
+        public FluentUrlBuilder AddPathPart(string pathPart)
         {
-            pathPart = pathPart.Trim('/');
+            pathPart = FluentUrlBuilder.TrimString(pathPart);
             if (!string.IsNullOrWhiteSpace(pathPart))
-                this.urlBuilder.Append('/').Append(pathPart);
+                this.urlParts.Add(pathPart);
             return this;
         }
 
@@ -75,10 +78,10 @@ namespace FluentUrlBuilder
         /// <param name="pathPart">Part to be added</param>
         /// <param name="add">Initial check before adding the parameter</param>
         /// <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
-        public FluentUrlBuilder AddPart(string pathPart, bool add)
+        public FluentUrlBuilder AddPathPart(string pathPart, bool add)
         {
             if (add)
-                return this.AddPart(pathPart);
+                return this.AddPathPart(pathPart);
             return this;
         }
 
@@ -87,10 +90,10 @@ namespace FluentUrlBuilder
         /// </summary>
         /// <param name="fragment">Fragment part to be added. If a fragment has already been set, it will be replaced with the new one</param>
         /// <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
-        public FluentUrlBuilder AddHashValue(string fragment)
+        public FluentUrlBuilder AddHashFragment(string fragment)
         {
             if (!string.IsNullOrWhiteSpace(fragment))
-                this.hashPart = fragment;
+                this.hashFragment = fragment;
             return this;
         }
 
@@ -100,7 +103,7 @@ namespace FluentUrlBuilder
         /// <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
         public FluentUrlBuilder RemoveFragment()
         {
-            this.hashPart = null;
+            this.hashFragment = null;
             return this;
         }
 
@@ -152,15 +155,24 @@ namespace FluentUrlBuilder
         /// <returns>URL in the form of [baseUrl]/[parts]?[query-string]#[fragment]</returns>
         public string GetResult()
         {
+            var urlBuilder = new StringBuilder();
+
+            for (int i = 0; i < urlParts.Count - 1; i++)
+            {
+                urlBuilder.Append(urlParts.ElementAt(i)).Append("/");
+
+            }
+            urlBuilder.Append(urlParts.Last());
+
             if (qs.Keys.Any())
             {
-                this.urlBuilder.Append("?");
+                urlBuilder.Append("?");
 
                 var sel = qs.Select(x => $"{x.Key}={x.Value}");
                 urlBuilder.Append(string.Join("?", sel));
             }
-            if (!string.IsNullOrWhiteSpace(hashPart))
-                urlBuilder.Append($"#{hashPart}");
+            if (!string.IsNullOrWhiteSpace(hashFragment))
+                urlBuilder.Append($"#{hashFragment}");
 
             return urlBuilder.ToString();
         }
@@ -173,6 +185,14 @@ namespace FluentUrlBuilder
         {
             var url = this.GetResult();
             return new Uri(url);
+        }
+
+
+        internal static string TrimString(string part)
+        {
+            if (string.IsNullOrWhiteSpace(part))
+                return string.Empty;
+            return part.Trim().Trim('/').Trim();
         }
     }
 }
