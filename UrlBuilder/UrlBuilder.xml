@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>UrlBuilder</name>
+    </assembly>
+    <members>
+        <member name="T:UrlBuilder.UrlBuilder">
+            <summary>
+            Creates and build a URL. The building operations can be appendend.
+            </summary>
+        </member>
+        <member name="M:UrlBuilder.UrlBuilder.Initialize(System.String[])">
+            <summary>
+            Initializes a UrlBuilder object.
+            </summary>
+            <param name="parts">Inital parts used to build the final URL. 
+            </param>
+            <remarks>All the parts are trimmed of the initial and final slashes, and if the part is not empty it is used to build the URL.</remarks>
+            <example>
+            To initialize a builder, you can write <c>var builder = UrlBuilder.Initialize("http://example.com", "a-section", "a-subfolder")</c>.
+            </example>
+            <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
+        </member>
+        <member name="M:UrlBuilder.UrlBuilder.AddPart(System.String)">
+            <summary>
+            Adds a path part to the builder, only if the part is valid.
+            </summary>
+            <param name="pathPart">part to be added to the builder</param>
+            <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
+        </member>
+        <member name="M:UrlBuilder.UrlBuilder.AddPart(System.String,System.Boolean)">
+            <summary>
+            Adds a path part to the builder, only if the part is valid and the <paramref name="add"/> parameter is true.
+            </summary>
+            <remarks>The <paramref name="add"/> parameter allows you to conditionally add a part while building the URL.
+            </remarks>
+            <example>
+            <code>
+            var part = "my-page";
+            var builder = UrlBuilder.Initialize("http://example.com").AddPart(part, (part.Length > 5));
+            </code>
+            </example>
+            <param name="pathPart">Part to be added</param>
+            <param name="add">Initial check before adding the parameter</param>
+            <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
+        </member>
+        <member name="M:UrlBuilder.UrlBuilder.AddHashValue(System.String)">
+            <summary>
+            Adds a Fragment to the URL, (ex: http://example.com/path#fragment)
+            </summary>
+            <param name="fragment">Fragment part to be added. If a fragment has already been set, it will be replaced with the new one</param>
+            <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
+        </member>
+        <member name="M:UrlBuilder.UrlBuilder.RemoveFragment">
+            <summary>
+            Removes the Fragment part
+            </summary>
+            <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
+        </member>
+        <member name="M:UrlBuilder.UrlBuilder.AddQueryStringPair(System.String,System.String)">
+            <summary>
+            Adds a query string value.
+            </summary>
+            <param name="key">Key of the query string</param>
+            <param name="value">Value of the query string</param>
+            <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
+        </member>
+        <member name="M:UrlBuilder.UrlBuilder.RemoveQueryStringPair(System.String)">
+            <summary>
+            Removes a query string value.
+            </summary>
+            <param name="key">Key to be removed</param>
+            <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
+        </member>
+        <member name="M:UrlBuilder.UrlBuilder.ReplaceQueryStringPair(System.String,System.String)">
+            <summary>
+            Replaces an existing query string value.
+            </summary>
+            <param name="key">Key to be added</param>
+            <param name="value">Value to be added</param>
+            <returns></returns>
+        </member>
+        <member name="M:UrlBuilder.UrlBuilder.GetResult">
+            <summary>
+            Builds the URL and returns it as a string
+            </summary>
+            <returns>URL in the form of [baseUrl]/[parts]?[query-string]#[fragment]</returns>
+        </member>
+        <member name="M:UrlBuilder.UrlBuilder.GetAsUri">
+            <summary>
+            Builds the URL and returns it as a Uri object
+            </summary>
+            <returns>A Uri object that represents the final result of the builder</returns>
+        </member>
+    </members>
+</doc>

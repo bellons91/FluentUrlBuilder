@@ -2,6 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
+    <PackageId>FluentUrlBuilder</PackageId>
+    <Authors>Davide Bellone</Authors>
+    <Company>Davide Bellone</Company>
+    <Product>Davide Bellone</Product>
+    <Description>A library to compose URLs in a fluent way</Description>
+    <PackageProjectUrl>https://github.com/bellons91/UrlBuilder/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/bellons91/UrlBuilder/</RepositoryUrl>
+    <AssemblyVersion>0.0.0.1</AssemblyVersion>
+    <FileVersion>0.0.0.1</FileVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\Davide\source\repos\bellons91\UrlBuilder\UrlBuilder\UrlBuilder.xml</DocumentationFile>
   </PropertyGroup>
 
 </Project>
