@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
-
+[assembly: InternalsVisibleTo("UrlBuilder.Tests")]
 namespace UrlBuilder
 {
+
     public class UrlBuilder
     {
-        StringBuilder urlBuilder;
-        Dictionary<string, string> qs;
-        string hashPart = "";
+        private StringBuilder urlBuilder;
+        internal Dictionary<string, string> qs;
+        internal string hashPart = "";
 
         private UrlBuilder(params string[] parts)
         {
