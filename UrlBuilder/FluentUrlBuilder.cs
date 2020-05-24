@@ -4,12 +4,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-/*TODO:  
- 2- rinominare Hash come Fragment
- 4- trasforma InsertQS in UpsertQS
- 5- trasforma InsertHash in UpsertHash
-     */
-
 
 [assembly: InternalsVisibleTo("FluentUrlBuilder.Tests")]
 namespace FluentUrlBuilder
@@ -22,14 +16,14 @@ namespace FluentUrlBuilder
         //private StringBuilder urlBuilder;
 
         internal List<string> urlParts;
-        internal Dictionary<string, string> qs;
+        internal Dictionary<string, string> queryStringValues;
         internal string hashFragment = "";
 
         private FluentUrlBuilder(params string[] parts)
         {
             var cleanedParts = parts.Select(p => p.Trim('/')).Where(p => !string.IsNullOrWhiteSpace(p));
             //urlBuilder = new StringBuilder(string.Join("/", cleanedParts));
-            qs = new Dictionary<string, string>();
+            queryStringValues = new Dictionary<string, string>();
             urlParts = new List<string>();
             urlParts.AddRange(cleanedParts);
         }
@@ -86,37 +80,32 @@ namespace FluentUrlBuilder
         }
 
         /// <summary>
-        /// Adds a Fragment to the URL, (ex: http://example.com/path#fragment)
+        /// Adds or overwrites a Fragment to the URL, (ex: http://example.com/path#fragment)
         /// </summary>
         /// <param name="fragment">Fragment part to be added. If a fragment has already been set, it will be replaced with the new one</param>
         /// <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
-        public FluentUrlBuilder AddHashFragment(string fragment)
+        public FluentUrlBuilder SetHashFragment(string fragment)
         {
-            if (!string.IsNullOrWhiteSpace(fragment))
-                this.hashFragment = fragment;
+            this.hashFragment = fragment;
             return this;
         }
 
-        /// <summary>
-        /// Removes the Fragment part
-        /// </summary>
-        /// <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
-        public FluentUrlBuilder RemoveFragment()
-        {
-            this.hashFragment = null;
-            return this;
-        }
 
         /// <summary>
-        /// Adds a query string value.
+        /// Adds or overwrites a query string value.
         /// </summary>
         /// <param name="key">Key of the query string</param>
         /// <param name="value">Value of the query string</param>
         /// <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
-        public FluentUrlBuilder AddQueryStringPair(string key, string value)
+        public FluentUrlBuilder UpsertQueryStringPair(string key, string value)
         {
             if (!string.IsNullOrWhiteSpace(key))
-                qs.Add(key, value);
+            {
+                if (queryStringValues.ContainsKey(key))
+                    queryStringValues[key] = value;
+                else
+                    queryStringValues.Add(key, value);
+            }
             return this;
         }
 
@@ -127,33 +116,19 @@ namespace FluentUrlBuilder
         /// <returns>Returns the same UrlBuilder object that can be used to concatenate other methods.</returns>
         public FluentUrlBuilder RemoveQueryStringPair(string key)
         {
-            if (!string.IsNullOrWhiteSpace(key) && this.qs.ContainsKey(key))
+            if (!string.IsNullOrWhiteSpace(key) && this.queryStringValues.ContainsKey(key))
             {
-                this.qs.Remove(key);
+                this.queryStringValues.Remove(key);
             }
             return this;
         }
 
-        /// <summary>
-        /// Replaces an existing query string value.
-        /// </summary>
-        /// <param name="key">Key to be added</param>
-        /// <param name="value">Value to be added</param>
-        /// <returns></returns>
-        public FluentUrlBuilder ReplaceQueryStringPair(string key, string value)
-        {
-            if (!string.IsNullOrWhiteSpace(key) && this.qs.ContainsKey(key))
-            {
-                this.qs[key] = value;
-            }
-            return this;
-        }
 
         /// <summary>
         /// Builds the URL and returns it as a string
         /// </summary>
         /// <returns>URL in the form of [baseUrl]/[parts]?[query-string]#[fragment]</returns>
-        public string GetResult()
+        public string GetAsString()
         {
             var urlBuilder = new StringBuilder();
 
@@ -164,12 +139,12 @@ namespace FluentUrlBuilder
             }
             urlBuilder.Append(urlParts.Last());
 
-            if (qs.Keys.Any())
+            if (queryStringValues.Keys.Any())
             {
                 urlBuilder.Append("?");
 
-                var sel = qs.Select(x => $"{x.Key}={x.Value}");
-                urlBuilder.Append(string.Join("?", sel));
+                var sel = queryStringValues.Select(x => $"{x.Key}={x.Value}");
+                urlBuilder.Append(string.Join("&", sel));
             }
             if (!string.IsNullOrWhiteSpace(hashFragment))
                 urlBuilder.Append($"#{hashFragment}");
@@ -183,7 +158,7 @@ namespace FluentUrlBuilder
         /// <returns>A Uri object that represents the final result of the builder</returns>
         public Uri GetAsUri()
         {
-            var url = this.GetResult();
+            var url = this.GetAsString();
             return new Uri(url);
         }
 
